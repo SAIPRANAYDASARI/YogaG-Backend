@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
+from django.contrib.auth.tokens import default_token_generator
+
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -19,27 +21,33 @@ class RegisterSerializer(serializers.ModelSerializer):
             "password",
             "confirm_password",
         ]
+
         extra_kwargs = {
             "password": {"write_only": True}
         }
 
     def validate_email(self, value):
         if User.objects.filter(email=value).exists():
-            raise serializers.ValidationError("Email already exists.")
+            raise serializers.ValidationError(
+                "Email already exists."
+            )
+
         return value
 
     def validate(self, data):
         if data["password"] != data["confirm_password"]:
             raise serializers.ValidationError(
-                {"confirm_password": "Passwords do not match."}
+                {
+                    "confirm_password":
+                    "Passwords do not match."
+                }
             )
+
         return data
 
     def create(self, validated_data):
-        # Remove confirm_password before creating the user
         validated_data.pop("confirm_password")
 
-        # Create user
         user = User.objects.create_user(
             username=validated_data["username"],
             first_name=validated_data["first_name"],
@@ -48,7 +56,6 @@ class RegisterSerializer(serializers.ModelSerializer):
             password=validated_data["password"],
         )
 
-        # Create empty profile
         Profile.objects.create(user=user)
 
         return user
@@ -56,13 +63,18 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
-    password = serializers.CharField(write_only=True)
+    password = serializers.CharField(
+        write_only=True
+    )
 
     def validate(self, attrs):
         username = attrs.get("username")
         password = attrs.get("password")
 
-        user = authenticate(username=username, password=password)
+        user = authenticate(
+            username=username,
+            password=password
+        )
 
         if not user:
             raise serializers.ValidationError(
@@ -73,5 +85,76 @@ class LoginSerializer(serializers.Serializer):
 
         return {
             "refresh": str(refresh),
-            "access": str(refresh.access_token),
+            "access": str(
+                refresh.access_token
+            ),
         }
+
+
+class LogoutSerializer(serializers.Serializer):
+    refresh = serializers.CharField()
+
+    def validate(self, attrs):
+        self.token = attrs["refresh"]
+        return attrs
+
+    def save(self):
+        token = RefreshToken(
+            self.token
+        )
+
+        token.blacklist()
+
+
+class ForgotPasswordSerializer(
+    serializers.Serializer
+):
+    email = serializers.EmailField()
+
+    def validate_email(
+        self,
+        value
+    ):
+        if not User.objects.filter(
+            email=value
+        ).exists():
+
+            raise serializers.ValidationError(
+                "User with this email does not exist."
+            )
+
+        return value
+
+
+class ResetPasswordSerializer(
+    serializers.Serializer
+):
+    user_id = serializers.IntegerField()
+    token = serializers.CharField()
+    password = serializers.CharField()
+
+    def validate(self, attrs):
+        user = User.objects.get(
+            id=attrs["user_id"]
+        )
+
+        if not default_token_generator.check_token(
+            user,
+            attrs["token"]
+        ):
+            raise serializers.ValidationError(
+                "Invalid token."
+            )
+
+        attrs["user"] = user
+
+        return attrs
+
+    def save(self):
+        user = self.validated_data["user"]
+
+        user.set_password(
+            self.validated_data["password"]
+        )
+
+        user.save()
