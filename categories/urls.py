@@ -1,21 +1,16 @@
-from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
+from .views import CategoryListView, CategoryDetailView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-
     path(
-        'api/auth/',
-        include('accounts.urls')
+        '',
+        CategoryListView.as_view(),
+        name='category-list'
     ),
 
     path(
-        'api/profile/',
-        include('profiles.urls')
-    ),
-
-    path(
-        'api/categories/',
-        include('categories.urls')
+        '<int:pk>/',
+        CategoryDetailView.as_view(),
+        name='category-detail'
     ),
 ]

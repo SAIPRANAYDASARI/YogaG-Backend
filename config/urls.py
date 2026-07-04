@@ -21,4 +21,5 @@ urlpatterns = [
         'api/categories/',
         include('categories.urls')
     ),
+    path('api/videos/', include('videos.urls')),
 ]
