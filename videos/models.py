@@ -22,7 +22,7 @@ class Video(models.Model):
         related_name='videos'
     )
 
-    youtube_url = models.URLField()
+    video_url = models.URLField()
 
     thumbnail = models.ImageField(
         upload_to='video_thumbnails/',

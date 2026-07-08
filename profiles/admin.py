@@ -7,8 +7,9 @@ class ProfileAdmin(admin.ModelAdmin):
 
     list_display = (
         'user',
+        'gender',
         'fitness_level',
-        'age',
+        
     )
 
     search_fields = (

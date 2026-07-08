@@ -1,48 +1,46 @@
 from django.contrib import admin
-from .models import Video, VideoBenefit, VideoStep
+
+from .models import (
+    Video,
+    VideoBenefit,
+    VideoStep,
+)
+
+
+class VideoBenefitInline(admin.TabularInline):
+    model = VideoBenefit
+    extra = 1
+
+
+class VideoStepInline(admin.TabularInline):
+    model = VideoStep
+    extra = 1
 
 
 @admin.register(Video)
 class VideoAdmin(admin.ModelAdmin):
 
     list_display = (
-        'title',
-        'category',
-        'difficulty',
-        'duration',
-        'is_active',
-    )
-
-    search_fields = (
-        'title',
-        'focus_area',
+        "id",
+        "title",
+        "category",
+        "difficulty",
+        "duration",
+        "is_active",
     )
 
     list_filter = (
-        'category',
-        'difficulty',
-        'is_active',
+        "category",
+        "difficulty",
+        "is_active",
     )
 
-    ordering = (
-        'category',
-        'order',
+    search_fields = (
+        "title",
+        "focus_area",
     )
 
-
-@admin.register(VideoBenefit)
-class VideoBenefitAdmin(admin.ModelAdmin):
-
-    list_display = (
-        'video',
-        'order',
-    )
-
-
-@admin.register(VideoStep)
-class VideoStepAdmin(admin.ModelAdmin):
-
-    list_display = (
-        'video',
-        'order',
-    )
+    inlines = [
+        VideoBenefitInline,
+        VideoStepInline,
+    ]

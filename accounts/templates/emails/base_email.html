@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}YogaG{% endblock %}</title>
+
+    <style>
+
+        body{
+            margin:0;
+            padding:40px;
+            background:#F5F5F5;
+            font-family:Arial,Helvetica,sans-serif;
+        }
+
+        .container{
+            max-width:650px;
+            margin:auto;
+            background:white;
+            border-radius:12px;
+            overflow:hidden;
+            box-shadow:0 5px 18px rgba(0,0,0,.08);
+        }
+
+        .header{
+            background:#FF8C42;
+            color:white;
+            text-align:center;
+            padding:35px;
+        }
+
+        .content{
+            padding:40px;
+        }
+
+        .button{
+            background:#FF8C42;
+            color:white !important;
+            padding:14px 30px;
+            text-decoration:none;
+            border-radius:8px;
+            display:inline-block;
+            font-weight:bold;
+        }
+
+        .footer{
+            background:#FAFAFA;
+            padding:25px;
+            text-align:center;
+            color:#777;
+            font-size:13px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>🧘 YogaG</h1>
+        <p>Your Wellness Journey Begins</p>
+    </div>
+
+    <div class="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <div class="footer">
+        © 2026 YogaG Team<br>
+        Build a Healthier Life with Yoga
+    </div>
+
+</div>
+
+</body>
+</html>
