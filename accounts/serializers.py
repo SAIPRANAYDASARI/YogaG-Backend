@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
-
+from rest_framework_simplejwt.exceptions import TokenError
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
@@ -50,7 +50,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.set_password(password)
         user.save()
 
-        profile.objects.create(
+        Profile.objects.create(
             user=user
         )
         return user
@@ -90,11 +90,17 @@ class LogoutSerializer(serializers.Serializer):
 
     def save(self):
 
-        refresh_token = self.validated_data["refresh"]
+        try:
+            refresh_token = self.validated_data["refresh"]
+            token = RefreshToken(refresh_token)
+            token.blacklist()
 
-        token = RefreshToken(refresh_token)
-
-        token.blacklist()
+        except TokenError:
+            raise serializers.ValidationError(
+                {
+                    "refresh":"Invalid or expired refresh token ."
+                }
+            )
 
 class ForgotPasswordSerializer(serializers.Serializer):
 

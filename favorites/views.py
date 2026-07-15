@@ -1,11 +1,9 @@
-from django.shortcuts import render
-
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from django.shortcuts import get_object_or_404
+
 
 from .models import Favorite
 from .serializers import (
@@ -27,11 +25,7 @@ class AddFavoriteAPIView(APIView):
 
         if serializer.is_valid():
 
-            video = get_object_or_404(
-                Video,
-                id=serializer.validated_data["video"].id,
-                is_active=True,
-            )
+            video = serializer.validated_data["video"]
 
             favorite, created = Favorite.objects.get_or_create(
                 user=request.user,

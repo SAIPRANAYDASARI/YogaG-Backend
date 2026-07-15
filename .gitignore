@@ -1,6 +1,8 @@
 # Python
 __pycache__/
 *.py[cod]
+*.pyo
+*.pyd
 
 # Virtual Environment
 venv/
@@ -20,3 +22,6 @@ staticfiles/
 
 # macOS
 .DS_Store
+
+# JetBrains
+.idea/

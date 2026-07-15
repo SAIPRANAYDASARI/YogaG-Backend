@@ -18,4 +18,16 @@ class CategoryAdmin(admin.ModelAdmin):
 
     search_fields = (
         "name",
+        "description",
     )
+
+    ordering = (
+    "name",
+    )
+
+    readonly_fields = (
+    "created_at",
+    "updated_at",
+    )
+
+    list_per_page = 20

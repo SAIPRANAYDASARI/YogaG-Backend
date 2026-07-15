@@ -17,6 +17,8 @@ class VideoBenefitSerializer(serializers.ModelSerializer):
             "order",
         ]
 
+        read_only_fields = fields
+
 
 class VideoStepSerializer(serializers.ModelSerializer):
 
@@ -27,6 +29,8 @@ class VideoStepSerializer(serializers.ModelSerializer):
             "step",
             "order",
         ]
+
+        read_only_fields = fields
 
 
 class VideoSerializer(serializers.ModelSerializer):
@@ -48,15 +52,30 @@ class VideoSerializer(serializers.ModelSerializer):
         model = Video
 
         fields = [
+            # Basic information 
+
             "id",
             "title",
             "description",
             "category",
+
+            #Media
+
             "video_url",
             "thumbnail",
+
+            #Yoga Details
+
+
             "duration",
             "difficulty",
             "focus_area",
+
+            #Related Data
+
+            
             "benefits",
             "steps",
         ]
+
+        read_only_fields = fields

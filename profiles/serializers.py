@@ -42,3 +42,22 @@ class ProfileSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         ]
+
+def validate_height(self, value):
+
+    if value is not None and value <= 0:
+        raise serializers.ValidationError(
+            "Height must be greater than zero."
+        )
+
+    return value
+
+
+def validate_weight(self, value):
+
+    if value is not None and value <= 0:
+        raise serializers.ValidationError(
+            "Weight must be greater than zero."
+        )
+
+    return value

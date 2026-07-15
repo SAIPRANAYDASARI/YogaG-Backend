@@ -1,5 +1,3 @@
-from django.shortcuts import render
-
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -42,7 +40,9 @@ class StartSessionAPIView(APIView):
                 is_active=True,
             ).order_by("order")
 
-            if not videos.exists():
+            video_count = videos.count()
+
+            if video_count == 0:
 
                 return Response(
                     {
@@ -57,7 +57,7 @@ class StartSessionAPIView(APIView):
                 session = Session.objects.create(
                     user=request.user,
                     category=category,
-                    total_videos=videos.count(),
+                    total_videos=video_count,
                 )
 
                 session_videos = [
@@ -138,17 +138,24 @@ class CompleteVideoAPIView(APIView):
 
             session_video.completed_at = timezone.now()
 
-            session_video.save()
+            session_video.save(
+                update_fields=[
+                    "completed",
+                    "watched_duration",
+                    "completed_at",
+                ]
+            )
 
             session = session_video.session
 
-            session.completed_videos = (
-                session.session_videos.filter(
-                    completed=True
-                ).count()
-            )
+            session.completed_videos +=1
+           
 
-            session.save()
+            session.save(
+                update_fields=[
+                    "completed_videos",
+                ]
+            )
 
             return Response(
                 {
@@ -219,7 +226,12 @@ class CompleteSessionAPIView(APIView):
 
             session.completed_at = timezone.now()
 
-            session.save()
+            session.save(
+                update_fields=[
+                    "status",
+                    "completed_at",
+                ]
+            )
 
             return Response(
                 {

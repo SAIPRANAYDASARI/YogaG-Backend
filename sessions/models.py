@@ -24,11 +24,14 @@ class Session(models.Model):
     )
 
     total_videos = models.PositiveIntegerField(
-        default=0
+        default=0,
+        help_text="Total number of videos in this session",
     )
 
     completed_videos = models.PositiveIntegerField(
-        default=0
+        default=0,
+        help_text="Number of completed videos",
+
     )
 
     started_at = models.DateTimeField(
@@ -57,21 +60,18 @@ class Session(models.Model):
         return f"{self.user.email} - {self.category.name}"
     
 
-
-
-
 class SessionVideo(models.Model):
 
     session = models.ForeignKey(
         Session,
         on_delete=models.CASCADE,
-        related_name='session_videos'
+        related_name="session_videos"
     )
 
     video = models.ForeignKey(
         Video,
         on_delete=models.CASCADE,
-        related_name='session_videos'
+        related_name="session_videos"
     )
 
     completed = models.BooleanField(
@@ -89,7 +89,12 @@ class SessionVideo(models.Model):
     )
 
     class Meta:
-        unique_together = ('session', 'video')
+        constraints = [
+            models.UniqueConstraint(
+                fields=["session","video"],
+                name="unique_session_video",
+            )
+        ]
         ordering = ['id']
 
     def __str__(self):

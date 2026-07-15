@@ -22,12 +22,15 @@ class Video(models.Model):
         related_name='videos'
     )
 
-    video_url = models.URLField()
+    video_url = models.URLField(
+        help_text="URL of the yoga video"
+    )
 
     thumbnail = models.ImageField(
         upload_to='video_thumbnails/',
         blank=True,
-        null=True
+        null=True,
+        help_text="Thumbnail image for the video"
     )
 
     duration = models.PositiveIntegerField(
@@ -40,11 +43,11 @@ class Video(models.Model):
     )
 
     focus_area = models.CharField(
-    max_length=100,
-    help_text="Example: Neck, Shoulders, Lower Back"
+        max_length=100,
+        help_text="Example: Neck, Shoulders, Lower Back"
     )
     is_active = models.BooleanField(
-    default=True
+        default=True
     )
 
     order = models.PositiveIntegerField(
@@ -62,7 +65,7 @@ class Video(models.Model):
 
 
     class Meta:
-        ordering = ['order', 'title']
+        ordering = ["order", "title"]
 
     def __str__(self):
         return self.title
@@ -75,7 +78,9 @@ class VideoBenefit(models.Model):
         related_name='benefits'
     )
 
-    benefit = models.TextField()
+    benefit = models.TextField(
+        help_text="Benefit of performing this yoga video"
+    )
 
     order = models.PositiveIntegerField(
         default=1
@@ -96,7 +101,9 @@ class VideoStep(models.Model):
         related_name='steps'
     )
 
-    step = models.TextField()
+    step = models.TextField(
+        help_text="Step to perform this yoga video"
+    )
 
     order = models.PositiveIntegerField(
         default=1

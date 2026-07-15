@@ -7,6 +7,7 @@ from .models import (
 
 from categories.models import Category
 
+
 class StartSessionSerializer(serializers.Serializer):
 
     category = serializers.PrimaryKeyRelatedField(
@@ -36,6 +37,7 @@ class CompleteSessionSerializer(serializers.Serializer):
 class SessionVideoSerializer(
     serializers.ModelSerializer
 ):
+    
 
     class Meta:
 
@@ -48,6 +50,9 @@ class SessionVideoSerializer(
             "watched_duration",
             "completed_at",
         ]
+
+        read_only_fields = fields
+        
 
 class SessionSerializer(
     serializers.ModelSerializer
@@ -73,3 +78,5 @@ class SessionSerializer(
             "completed_at",
             "session_videos",
         ]
+
+        read_only_fields = fields

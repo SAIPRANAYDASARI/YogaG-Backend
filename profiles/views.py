@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -7,15 +6,24 @@ from rest_framework.views import APIView
 from .models import Profile
 from .serializers import ProfileSerializer
 
-class ViewProfileAPIView(APIView):
+
+class BaseProfileAPIView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get_profile(self, request):
+
+        profile, _=  Profile.objects.get_or_create(user=request.user)
+
+        return profile
+
+class ViewProfileAPIView(BaseProfileAPIView):
 
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
 
-        profile, created = Profile.objects.get_or_create(
-            user=request.user
-        )
+        profile = self.get_profile(request)
 
         serializer = ProfileSerializer(profile)
 
@@ -27,15 +35,13 @@ class ViewProfileAPIView(APIView):
             status=status.HTTP_200_OK,
         )
     
-class UpdateProfileAPIView(APIView):
+class UpdateProfileAPIView(BaseProfileAPIView):
 
     permission_classes = [IsAuthenticated]
 
     def patch(self, request):
 
-        profile, created = Profile.objects.get_or_create(
-            user=request.user
-        )
+        profile = self.get_profile(request)
 
         serializer = ProfileSerializer(
             profile,
@@ -63,3 +69,4 @@ class UpdateProfileAPIView(APIView):
             },
             status=status.HTTP_400_BAD_REQUEST,
         )
+    

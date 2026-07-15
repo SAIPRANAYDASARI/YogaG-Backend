@@ -22,6 +22,7 @@ class FavoriteSerializer(serializers.ModelSerializer):
             "id",
             "created_at",
         ]
+        
 
 class AddFavoriteSerializer(serializers.Serializer):
 

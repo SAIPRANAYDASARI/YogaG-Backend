@@ -10,11 +10,13 @@ from .models import (
 class VideoBenefitInline(admin.TabularInline):
     model = VideoBenefit
     extra = 1
+    ordering = ("order",)
 
 
 class VideoStepInline(admin.TabularInline):
     model = VideoStep
     extra = 1
+    ordering = ("order",)
 
 
 @admin.register(Video)
@@ -26,6 +28,7 @@ class VideoAdmin(admin.ModelAdmin):
         "category",
         "difficulty",
         "duration",
+        "order",
         "is_active",
     )
 
@@ -37,10 +40,25 @@ class VideoAdmin(admin.ModelAdmin):
 
     search_fields = (
         "title",
+        "description",
         "focus_area",
+    )
+
+    ordering = (
+        "category",
+        "order",
+    )
+
+    readonly_fields = (
+        "created_at",
+        "updated_at",
     )
 
     inlines = [
         VideoBenefitInline,
         VideoStepInline,
     ]
+
+    list_per_page = 20
+
+    

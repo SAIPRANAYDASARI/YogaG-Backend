@@ -12,7 +12,7 @@ class CategorySerializer(serializers.ModelSerializer):
             "name",
             "description",
             "icon",
-            "is_active",
+            
         ]
 
         read_only_fields = [

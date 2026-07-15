@@ -15,3 +15,17 @@ class FavoriteAdmin(admin.ModelAdmin):
         'user__email',
         'video__title',
     )
+
+    list_filter = (
+    "created_at",
+    )
+
+    ordering = (
+    "-created_at",
+    )
+
+    readonly_fields = (
+    "created_at",
+    )
+
+    list_per_page = 20

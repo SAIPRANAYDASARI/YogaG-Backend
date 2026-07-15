@@ -10,7 +10,7 @@ class Category(models.Model):
     description = models.TextField()
     
     is_active = models.BooleanField(
-    default=True
+        default=True
     )
 
     icon = models.ImageField(
@@ -28,7 +28,7 @@ class Category(models.Model):
     )
 
     class Meta:
-        ordering = ['name']
+        ordering = ["name"]
         verbose_name = "Category"
         verbose_name_plural = "Categories"
 

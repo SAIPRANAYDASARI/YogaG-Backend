@@ -22,8 +22,6 @@ class Profile(models.Model):
         related_name='profile'
     )
 
-    
-
     profile_image = models.ImageField(
         upload_to='profile_images/',
         blank=True,
@@ -57,16 +55,16 @@ class Profile(models.Model):
         choices=FITNESS_LEVEL_CHOICES
     )
 
-    fitness_goal=models.CharField(
+    fitness_goal = models.CharField(
         max_length=100,
         blank=True
     )
 
-    medical_conditions=models.TextField(
+    medical_conditions = models.TextField(
         blank=True
     )
 
-    bio=models.TextField(
+    bio =models.TextField(
         blank=True
     )
 
@@ -81,4 +79,6 @@ class Profile(models.Model):
 
 
     def __str__(self):
-        return f"{self.user.first_name} {self.user.last_name}"
+        if self.user.get_full_name():
+            return self.user.get_full_name()
+        return self.user.email 

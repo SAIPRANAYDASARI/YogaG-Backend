@@ -7,7 +7,7 @@ class Favorite(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='favorites'
+        related_name="favorites"
     )
 
     video = models.ForeignKey(
@@ -21,8 +21,14 @@ class Favorite(models.Model):
     )
 
     class Meta:
-        unique_together = ('user', 'video')
         ordering = ['-created_at']
+
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user","video"],
+                name="unique_user_favorite",
+            )
+        ]
 
     def __str__(self):
         return f"{self.user.email} ❤️ {self.video.title}"
